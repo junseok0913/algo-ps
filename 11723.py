@@ -1,29 +1,29 @@
 '''
 cmd_list로 한번에 입력 받으면 메모리 초과
+set 아닌 비트 마스크
 '''
+import sys
+input = sys.stdin.readline
+write = sys.stdout.write
+
 n = int(input())
-S = set()
+S = 0
 for i in range(n):
-    cmd = list(input().split())
+    cmd = input().split()
     if cmd[0] == 'add':
-        if cmd[1] not in S:
-            S.add(cmd[1])
+        S |= (1 << int(cmd[1]))
     elif cmd[0] == 'remove':
-        if cmd[1] in S:
-            S.remove(cmd[1])
+        S &= ~(1 << int(cmd[1]))
     elif cmd[0] == 'check':
-        if cmd[1] in S:
-            print(1)
+        if S & (1 << int(cmd[1])):
+            write('1\n')
         else:
-            print(0)
+            write('0\n')
     elif cmd[0] == 'toggle':
-        if cmd[1] in S:
-            S.remove(cmd[1])
-        else:
-            S.add(cmd[1])
+        S ^= (1 << int(cmd[1]))
     elif cmd[0] == 'all':
-        S = set(map(str, range(1,21)))
+        S = (1 << 21) - 2
     elif cmd[0] == 'empty':
-        S = set()
+        S = 0
     else:
         raise Exception('Unknown Command')
